@@ -17,13 +17,13 @@
     </button>
     <div v-if="startFlag">
       <div class="question mb-20">{{currentQuestion}}</div>
-      <div v-if="this.questions.length == 0" class="clear">Clear!!!</div>
-      <!--
-      <button v-if="this.questions.length == 0" class="startButton mb-20" @click="againGameStart">
+      <div v-if="this.initialQuestionCount == this.currentQuestionCount" class="clear mb-20">
+        Clear!!!
+      </div>
+      <button v-if="this.initialQuestionCount == this.currentQuestionCount" class="startButton mb-20" @click="againGameStart">
         Play Again
       </button>
-      -->
-      <div v-if="this.questions.length != 0" class="typeFormWrapper mb-20">
+      <div v-if="this.initialQuestionCount != this.currentQuestionCount" class="typeFormWrapper mb-20">
         <input id="typeForm" v-model="typeBox" type="text" class="typeForm" />
       </div>
       <div class="gaugeWrapper mb-20">
@@ -44,7 +44,7 @@
           'chine',
           'demon',
           'evidence',
-          'panth'
+          'pants'
         ],
         typeBox: "",
         currentQuestionCount: 0,
@@ -70,26 +70,39 @@
         gameStart: function () {
           this.startFlag = true;
           this.initialQuestionCount = this.questions.length
+          this.questions = this.arrayShuffle(this.questions)
+          this.currentQuestion = this.questions[0]
           this.$nextTick(function () {
             document.getElementById('typeForm').focus()
           })
         },
         againGameStart: function () {
-          this.initialQuestionCount = this.questions.length
+          this.currentQuestionCount = 0
+          this.questionCount = 0
+          this.arrayShuffle(this.questions)
+          this.currentQuestion = this.questions[0]
           this.$nextTick(function () {
             document.getElementById('typeForm').focus()
           })
-          this.currentQuestion = this.questions[0]
+        },
+        arrayShuffle: function (questions) {
+          for (let i = questions.length - 1; 0 < i; i--) {
+            let rand = Math.floor(Math.random() * (i + 1))
+            let tmpData = questions[i]
+            questions[i] = questions[rand]
+            questions[rand] = tmpData
+          }
+          return questions
         }
       },
       mounted: function () {
-        this.currentQuestion = this.questions[0]
+        //this.currentQuestion = this.questions[0]
       },
       watch: {
         typeBox: function (e) {
           if (e == this.currentQuestion) {
-            this.questions.splice(0, 1)
-            this.currentQuestion = this.questions[0]
+            this.questionCount = this.questionCount + 1
+            this.currentQuestion = this.questions[this.questionCount]
             this.typeBox = ""
             this.currentQuestionCount = this.currentQuestionCount + 1
           }
