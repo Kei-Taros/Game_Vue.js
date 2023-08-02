@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>Welcome to Vue</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.11/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app" class="container">
+    <div class="title">
+      <h1>Typing Game</h1>
+      <div class="marker"></div>
+    </div>
+    <button v-if="startFlag != true" class="startButton mb-20" @click="gameStart">
+      START
+    </button>
+    <div v-if="startFlag">
+      <div class="question mb-20">{{currentQuestion}}</div>
+      <div v-if="this.questions.length == 0" class="clear">Clear!!!</div>
+      <!--
+      <button v-if="this.questions.length == 0" class="startButton mb-20" @click="againGameStart">
+        Play Again
+      </button>
+      -->
+      <div v-if="this.questions.length != 0" class="typeFormWrapper mb-20">
+        <input id="typeForm" v-model="typeBox" type="text" class="typeForm" />
+      </div>
+      <div class="gaugeWrapper mb-20">
+        <div v-bind:style="styleObject" class="gauge"></div>
+      </div>
+      <div>{{currentQuestionCount}}/{{initialQuestionCount}}</div>
+    </div>
+  </div>
+  <script>
+    new Vue({
+      el: "#app",
+      data: {
+        startFlag: "",
+        currentQuestion: "",
+        questions: [
+          'amazon',
+          'blade',
+          'chine',
+          'demon',
+          'evidence',
+          'panth'
+        ],
+        typeBox: "",
+        currentQuestionCount: 0,
+        questionCount: 0,
+        initialQuestionCount: 0
+      },
+      computed: {
+        styleObject: function () {
+          width = (100 / this.initialQuestionCount) * this.currentQuestionCount + "%"
+          if (this.currentQuestionCount == this.initialQuestionCount) {
+            color = "#03a9f4"
+          }
+          else {
+            color = "orange"
+          }
+          return {
+            'width': width,
+            'background-color': color
+          }
+        }
+      },
+      methods: {
+        gameStart: function () {
+          this.startFlag = true;
+          this.initialQuestionCount = this.questions.length
+          this.$nextTick(function () {
+            document.getElementById('typeForm').focus()
+          })
+        },
+        againGameStart: function () {
+          this.initialQuestionCount = this.questions.length
+          this.$nextTick(function () {
+            document.getElementById('typeForm').focus()
+          })
+          this.currentQuestion = this.questions[0]
+        }
+      },
+      mounted: function () {
+        this.currentQuestion = this.questions[0]
+      },
+      watch: {
+        typeBox: function (e) {
+          if (e == this.currentQuestion) {
+            this.questions.splice(0, 1)
+            this.currentQuestion = this.questions[0]
+            this.typeBox = ""
+            this.currentQuestionCount = this.currentQuestionCount + 1
+          }
+        }
+      }
+    })
+  </script>
+</body>
+</html>
