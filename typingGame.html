@@ -67,7 +67,7 @@
         }
       },
       methods: {
-        gameStart: function () {
+        gameStart() {
           this.startFlag = true;
           this.initialQuestionCount = this.questions.length
           this.questions = this.arrayShuffle(this.questions)
@@ -76,7 +76,7 @@
             document.getElementById('typeForm').focus()
           })
         },
-        againGameStart: function () {
+        againGameStart() {
           this.currentQuestionCount = 0
           this.questionCount = 0
           this.arrayShuffle(this.questions)
@@ -85,7 +85,7 @@
             document.getElementById('typeForm').focus()
           })
         },
-        arrayShuffle: function (questions) {
+        arrayShuffle(questions) {
           for (let i = questions.length - 1; 0 < i; i--) {
             let rand = Math.floor(Math.random() * (i + 1))
             let tmpData = questions[i]
